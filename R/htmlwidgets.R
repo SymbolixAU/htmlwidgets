@@ -188,6 +188,7 @@ toHTML <- function(x, standalone = FALSE, knitrOptions = NULL) {
       htmltools::tagList(
         x$prepend,
         widget_html(
+          x = x,
           name = class(x)[1],
           package = attr(x, "package"),
           id = id,
@@ -216,7 +217,7 @@ toHTML <- function(x, standalone = FALSE, knitrOptions = NULL) {
 }
 
 
-widget_html <- function(name, package, id, style, class, inline = FALSE, ...){
+widget_html <- function(x, name, package, id, style, class, inline = FALSE, ...){
 
   # attempt to lookup custom html function for widget
   fn <- tryCatch(get(paste0(name, "_html"),
@@ -226,7 +227,7 @@ widget_html <- function(name, package, id, style, class, inline = FALSE, ...){
 
   # call the custom function if we have one, otherwise create a div
   if (is.function(fn)) {
-    fn(id = id, style = style, class = class, ...)
+    fn(x = x, id = id, style = style, class = class, ...)
   } else if (inline) {
     tags$span(id = id, style = style, class = class)
   } else {
